@@ -1,10 +1,7 @@
 CREATE TABLE IF NOT EXISTS load_metadata (
-    id SERIAL PRIMARY KEY,
-    run_id INT NOT NULL,
+    run_id UUID PRIMARY KEY,
     dataset_name VARCHAR(100) NOT NULL,
     status VARCHAR(20),
-    rows_read INT,
-    rows_loaded INT,
     error_message TEXT,
     started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     finished_at TIMESTAMP
