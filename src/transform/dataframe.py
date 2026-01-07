@@ -31,5 +31,6 @@ def transform_data(file_path: str, output_path: str) -> None:
     """
     # Example transformation: Drop rows with any missing values
     df = load_dataset_to_dataframe(file_path)
+    print(f"Loaded data with shape: {df.shape}")
     transformed_df = df.dropna()
     return save_dataframe_to_csv(transformed_df, output_path)

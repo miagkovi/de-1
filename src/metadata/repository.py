@@ -6,8 +6,8 @@ Update load status on success or failure.
 
 def log_start(run_id, dataset_name=None):
     # Logic to create a pipeline start record in load_metadata table
-    pass
+    print(f"Logging start of pipeline run {run_id} for dataset {dataset_name}")
 
 def log_end(run_id, status, error_message=None):
     # Logic to update load status in load_metadata table
-    pass
+    print(f"Logging end of pipeline run {run_id}: {status}", f"Error: {error_message}" if error_message else "")

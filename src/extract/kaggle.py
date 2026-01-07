@@ -5,13 +5,10 @@ W/o transformations.
 
 import kagglehub
 
-def extract_dataset(dataset_name: str, download_path: str) -> None:
+def extract_dataset(dataset_name: str) -> None:
     """
-    Extracts a dataset from Kaggle and saves it to the specified download path.
-
-    Args:
-        dataset_name (str): The name of the Kaggle dataset to download (e.g., 'username/dataset-name').
-        download_path (str): The local path where the dataset will be saved.
+    Extracts a dataset from Kaggle using kagglehub.
     """
-    kagglehub.download_dataset(dataset_name, download_path)
-    return f"{download_path}/{dataset_name.split('/')[-1]}.csv"
+    path = kagglehub.dataset_download(dataset_name, path="CPU_benchmark_v4.csv", force_download=True)
+    print(f"Dataset downloaded to: {path}")
+    return path
