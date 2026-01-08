@@ -29,8 +29,8 @@ def transform_data(file_path: str, output_path: str) -> None:
         file_path (str): The path to the input CSV file.
         output_path (str): The path to save the transformed CSV file.
     """
-    # Example transformation: Drop rows with any missing values
     df = load_dataset_to_dataframe(file_path)
-    print(f"Loaded data with shape: {df.shape}")
-    transformed_df = df.dropna()
+    print("Dataframe rows before transformation: ", len(df))
+    transformed_df = df.dropna() # Drop rows with missing values
+    print("Dataframe rows after transformation: ", len(transformed_df))
     return save_dataframe_to_csv(transformed_df, output_path)
