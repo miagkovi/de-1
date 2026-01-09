@@ -12,7 +12,7 @@ def load_dataset_to_dataframe(file_path: str) -> pd.DataFrame:
     df = pd.read_csv(file_path)
     return df
 
-def save_dataframe_to_csv(df: pd.DataFrame, output_path: str) -> None:
+def save_dataframe_to_csv(df: pd.DataFrame, output_path: str) -> str:
     """
     Saves the DataFrame to a CSV file.
     Args:
