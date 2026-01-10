@@ -6,7 +6,11 @@ import psycopg2
 from contextlib import contextmanager
 
 @contextmanager
-def get_db_connection(user, password, host, port=5432, database=None):
+def get_db_connection(user: str,
+                      password: str,
+                      host: str,
+                      port: int = 5432,
+                      database: str = None):
     """
     Context manager for database connection.
     
@@ -19,13 +23,11 @@ def get_db_connection(user, password, host, port=5432, database=None):
     """
     conn = None
     try:
-        conn = psycopg2.connect(
-            user=user,
-            password=password,
-            host=host,
-            port=port,
-            database=database
-        )
+        conn = psycopg2.connect(user=user,
+                                password=password,
+                                host=host,
+                                port=port,
+                                database=database)
         yield conn
     finally:
         if conn:

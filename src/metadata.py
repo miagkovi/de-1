@@ -1,5 +1,5 @@
 """
-Metadata logging functions for the ETL pipeline.
+Metadata management for ETL pipeline.
 """
 
 def save_run_metadata(db_conn, run_id, run_start, run_end, run_status, run_errors=None) -> None:

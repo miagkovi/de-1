@@ -18,42 +18,37 @@ def run_pipeline():
     """Runs the ETL pipeline."""
     dataset_provider = "alanjo/cpu-benchmarks"
     dataset_name = "CPU_benchmark_v4.csv"
-    processed_data_path = f"./data/processed/{dataset_name}"
-
+    data_path = f"./data/{dataset_name}"
     run_start = datetime.now()
     run_id = uuid4()
 
-    with get_db_connection(
-        user=POSTGRES_USER,
-        password=POSTGRES_PASSWORD,
-        host=POSTGRES_HOST,
-        port=POSTGRES_PORT,
-        database=POSTGRES_DB
-    ) as conn:
+    with get_db_connection(user=POSTGRES_USER,
+                           password=POSTGRES_PASSWORD,
+                           host=POSTGRES_HOST,
+                           port=POSTGRES_PORT,
+                           database=POSTGRES_DB) as conn:
         try:
             raw_data_path = extract_dataset(handle=dataset_provider,
                                             path=dataset_name)
 
             transform_data(file_path=raw_data_path,
-                           output_path=processed_data_path)
+                           output_path=data_path)
             
-            load_data(processed_data_path)
+            load_data(db_conn=conn,
+                      data=data_path)
 
-            save_run_metadata(
-                db_conn=conn,
-                run_id=run_id,
-                run_start=run_start,
-                run_end=datetime.now(),
-                run_status="Success")
+            save_run_metadata(db_conn=conn,
+                              run_id=run_id,
+                              run_start=run_start,
+                              run_end=datetime.now(),
+                              run_status="Success")
 
         except Exception as e:
-            save_run_metadata(
-                db_conn=conn,
-                run_id=run_id,
-                run_start=run_start,
-                run_end=datetime.now(),
-                run_status="Failed",
-                run_errors=str(e))
-
+            save_run_metadata(db_conn=conn,
+                              run_id=run_id,
+                              run_start=run_start,
+                              run_end=datetime.now(),
+                              run_status="Failed",
+                              run_errors=str(e))
 if __name__ == "__main__":
     run_pipeline()
