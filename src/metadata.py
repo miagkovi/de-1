@@ -2,7 +2,16 @@
 Metadata logging functions for the ETL pipeline.
 """
 
-def log_status(run_id, db, dataset_name, start_time, end_time, error_message=None) -> None:
+def save_run_metadata(db_conn, run_id, run_start, run_end, run_status, run_errors=None) -> None:
     """Log status of the pipeline run."""
-    print(f"Logging status of pipeline run {run_id} for dataset {dataset_name}",
-          f"Error: {error_message}" if error_message else "Success")
+    if run_status in ["Success", "Failed"] and run_start <= run_end:
+        db_conn.cursor().execute(
+            """
+            INSERT INTO metadata (run_id, run_status, run_start, run_end, run_errors)
+            VALUES (%s, %s, %s, %s, %s)
+            """,
+            (run_id, run_status, run_start, run_end, run_errors)
+        )
+        db_conn.commit()
+    else:
+        raise ValueError("Invalid run metadata.")
