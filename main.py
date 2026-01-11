@@ -35,7 +35,7 @@ def run_pipeline():
                            output_path=data_path)
             
             load_data(db_conn=conn,
-                      data=data_path)
+                      data_path=data_path)
 
             save_run_metadata(db_conn=conn,
                               run_id=run_id,
