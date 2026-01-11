@@ -2,13 +2,15 @@
 Logic for loading data into Postgres database.
 """
 
-def load_data(db_conn, data_path: str):
+def load_data(db_conn, data_path: str) -> None:
     """
     Load data from CSV file into Postgres database.
     Args:
         db_conn: Active database connection.
         data_path (str): Path to the CSV file containing the data.
     """
+    if not data_path.endswith(".csv"):
+        raise ValueError("Only CSV files are supported for loading.")
     try:
         with open(data_path, 'r', encoding='utf-8') as file:
             # Using COPY command for efficient bulk loading
