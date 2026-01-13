@@ -1,18 +1,21 @@
 """
 Logic for loading data into Postgres database.
 """
+from pathlib import Path
 
-def load_data(db_conn, data_path: str) -> None:
+
+def load_data(db_conn, file_path: str) -> None:
     """
     Load data from CSV file into Postgres database.
     Args:
         db_conn: Active database connection.
-        data_path (str): Path to the CSV file containing the data.
+        file_path (str): Path to the CSV file containing the data.
     """
-    if not data_path.endswith(".csv"):
-        raise ValueError("Only CSV files are supported for loading.")
+    file_path = Path(file_path)
+    if not file_path.exists() or file_path.suffix != ".csv":
+        raise ValueError("Invalid file path or format. Please provide a valid CSV file.")
     try:
-        with open(data_path, 'r', encoding='utf-8') as file:
+        with open(file_path, 'r', encoding='utf-8') as file:
             # Using COPY command for efficient bulk loading
             sql = f"""
             COPY cpu_benchmark FROM STDIN WITH CSV HEADER DELIMITER AS ',';

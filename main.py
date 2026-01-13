@@ -10,7 +10,7 @@ from datetime import datetime
 from extract import extract_dataset
 from metadata import save_run_metadata
 from transform import transform_data
-from db import get_db_connection
+from engine import get_db_connection
 from config import POSTGRES_HOST, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB, POSTGRES_PORT
 
 
@@ -35,7 +35,7 @@ def run_pipeline():
                            output_path=data_path)
             
             load_data(db_conn=conn,
-                      data_path=data_path)
+                      file_path=data_path)
 
             save_run_metadata(db_conn=conn,
                               run_id=run_id,
