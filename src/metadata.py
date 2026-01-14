@@ -1,16 +1,17 @@
 """
 Metadata management for ETL pipeline.
 """
+from models import RunMetadata
 
-def save_run_metadata(db_conn, run_id, run_start, run_end, run_status, run_errors=None) -> None:
+def save_run_metadata(db_conn, metadata: RunMetadata) -> None:
     """Log status of the pipeline run."""
-    if run_status not in ["Success", "Failed"] or run_start > run_end:
+    if metadata.status not in ["Success", "Failed"] or metadata.start_time > metadata.end_time:
         raise ValueError("Invalid run metadata.")
     db_conn.cursor().execute(
         """
-        INSERT INTO metadata (run_id, run_status, run_start, run_end, run_errors)
+        INSERT INTO metadata (run_id, status, start_time, end_time, errors)
         VALUES (%s, %s, %s, %s, %s)
         """,
-        (run_id, run_status, run_start, run_end, run_errors)
+        (metadata.run_id, metadata.status, metadata.start_time, metadata.end_time, metadata.errors)
     )
     db_conn.commit()

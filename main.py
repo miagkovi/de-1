@@ -9,6 +9,7 @@ from datetime import datetime
 
 from extract import extract_dataset
 from metadata import save_run_metadata
+from models import RunMetadata
 from transform import transform_data
 from engine import get_db_connection
 from config import POSTGRES_HOST, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB, POSTGRES_PORT
@@ -16,11 +17,14 @@ from config import POSTGRES_HOST, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB,
 
 def run_pipeline():
     """Runs the ETL pipeline."""
+    metadata = RunMetadata(
+        run_id=uuid4(),
+        status="Running",
+        start_time=datetime.now()
+    )
     dataset_provider = "alanjo/cpu-benchmarks"
     dataset_name = "CPU_benchmark_v4.csv"
     data_path = f"./data/{dataset_name}"
-    run_start = datetime.now()
-    run_id = uuid4()
 
     with get_db_connection(user=POSTGRES_USER,
                            password=POSTGRES_PASSWORD,
@@ -36,19 +40,20 @@ def run_pipeline():
             
             load_data(db_conn=conn,
                       file_path=data_path)
+            
+            metadata.status = "Success"
+            metadata.end_time = datetime.now()
 
             save_run_metadata(db_conn=conn,
-                              run_id=run_id,
-                              run_start=run_start,
-                              run_end=datetime.now(),
-                              run_status="Success")
+                              metadata=metadata)
 
         except Exception as e:
+            metadata.status = "Failed"
+            metadata.end_time = datetime.now()
+            metadata.errors = str(e)
+
             save_run_metadata(db_conn=conn,
-                              run_id=run_id,
-                              run_start=run_start,
-                              run_end=datetime.now(),
-                              run_status="Failed",
-                              run_errors=str(e))
+                              metadata=metadata)
+
 if __name__ == "__main__":
     run_pipeline()
