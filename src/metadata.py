@@ -1,7 +1,7 @@
 """
 Metadata management for ETL pipeline.
 """
-from models import RunMetadata
+from src.models import RunMetadata
 
 def save_run_metadata(db_conn, metadata: RunMetadata) -> None:
     """Log status of the pipeline run."""

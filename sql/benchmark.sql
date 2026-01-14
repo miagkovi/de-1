@@ -1,5 +1,4 @@
 CREATE TABLE IF NOT EXISTS cpu_benchmark (
-    id SERIAL PRIMARY KEY,
     cpu_name VARCHAR(100),
     price NUMERIC,
     cpu_mark INT,

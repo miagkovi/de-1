@@ -3,6 +3,7 @@ Database connection module.
 """
 
 import psycopg2
+import psycopg2.extras
 from contextlib import contextmanager
 
 @contextmanager
@@ -21,6 +22,9 @@ def get_db_connection(user: str,
         port (int): Database port.
         database (str): Database name.
     """
+
+    psycopg2.extras.register_uuid() # Enable UUID support
+
     conn = None
     try:
         conn = psycopg2.connect(user=user,
