@@ -18,7 +18,8 @@ def load_data(db_conn, file_path: str) -> None:
         with open(file_path, 'r', encoding='utf-8') as file:
             # Using COPY command for efficient bulk loading
             sql = f"""
-            COPY cpu_benchmark FROM STDIN WITH CSV HEADER DELIMITER AS ',';
+            COPY cpu_benchmark(cpu_name, price, cpu_mark, cpu_value, thread_mark, thread_value, tdp, power_perf, cores, test_date, socket, category)
+            FROM STDIN WITH CSV HEADER DELIMITER AS ',';
             """
             db_conn.cursor().copy_expert(sql, file)
         db_conn.commit()
