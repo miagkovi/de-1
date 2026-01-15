@@ -21,6 +21,8 @@ def get_db_connection(user: str,
         host (str): Database host.
         port (int): Database port.
         database (str): Database name.
+    Yields:
+        Active database connection.
     """
 
     psycopg2.extras.register_uuid() # Enable UUID support

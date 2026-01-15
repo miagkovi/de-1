@@ -10,7 +10,9 @@ from uuid import UUID
 @dataclass
 class RunMetadata:
     run_id: UUID
+    dataset_provider: str
+    dataset_name: str
     status: str
     start_time: datetime
-    end_time: Optional[datetime] = None
+    end_time: datetime
     errors: Optional[str] = None

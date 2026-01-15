@@ -14,6 +14,7 @@ def load_data(db_conn, file_path: str) -> None:
     file_path = Path(file_path)
     if not file_path.exists() or file_path.suffix != ".csv":
         raise ValueError("Invalid file path or format. Please provide a valid CSV file.")
+    
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
             # Using COPY command for efficient bulk loading

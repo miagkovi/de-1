@@ -19,12 +19,13 @@ def run_pipeline():
     """Runs the ETL pipeline."""
     metadata = RunMetadata(
         run_id=uuid4(),
+        dataset_provider="alanjo/cpu-benchmarks",
+        dataset_name="CPU_benchmark_v4.csv",
         status="Running",
         start_time=datetime.now()
     )
-    dataset_provider = "alanjo/cpu-benchmarks"
-    dataset_name = "CPU_benchmark_v4.csv"
-    data_path = f"./data/{dataset_name}"
+    
+    transformed_dataset_file_path = f"./data/{metadata.dataset_name}"
 
     with get_db_connection(user=POSTGRES_USER,
                            password=POSTGRES_PASSWORD,
@@ -32,14 +33,17 @@ def run_pipeline():
                            port=POSTGRES_PORT,
                            database=POSTGRES_DB) as conn:
         try:
-            raw_data_path = extract_dataset(handle=dataset_provider,
-                                            path=dataset_name)
+            conn.cursor().execute("TRUNCATE TABLE cpu_benchmark;")
+            conn.commit()
 
-            transform_data(file_path=raw_data_path,
-                           output_path=data_path)
+            raw_dataset_file_path = extract_dataset(handle=metadata.dataset_provider,
+                                                    path=metadata.dataset_name)
+
+            transform_data(file_path=raw_dataset_file_path,
+                           output_path=transformed_dataset_file_path)
             
             load_data(db_conn=conn,
-                      file_path=data_path)
+                      file_path=transformed_dataset_file_path)
             
             metadata.status = "Success"
             metadata.end_time = datetime.now()
